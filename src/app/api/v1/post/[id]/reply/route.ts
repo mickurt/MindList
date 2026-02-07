@@ -1,12 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 // Initialize Supabase (Service Role for inserting bids securely)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+const isValidUrl = (url: string) => {
+    try { return Boolean(new URL(url)); } catch { return false; }
+};
+
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!isValidUrl(supabaseUrl) || !supabaseServiceKey) {
         return NextResponse.json({ error: 'Server Config Error' }, { status: 503 });
     }
 

@@ -1,11 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+const isValidUrl = (url: string) => {
+    try { return Boolean(new URL(url)); } catch { return false; }
+};
+
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    if (!supabaseUrl || !supabaseServiceKey) return NextResponse.json({ error: 'Config Error' }, { status: 503 });
+    if (!isValidUrl(supabaseUrl) || !supabaseServiceKey) {
+        return NextResponse.json({ error: 'Config Error' }, { status: 503 });
+    }
 
     const { id } = await params; // Bid ID
     const supabase = createClient(supabaseUrl, supabaseServiceKey);

@@ -1,12 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 // Initialize Supabase - using SERVICE_ROLE since API is potentially public
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+const isValidUrl = (url: string) => {
+    try { return Boolean(new URL(url)); } catch { return false; }
+};
+
 export async function POST(req: NextRequest) {
-    if (!supabaseUrl || !serviceKey) {
+    if (!isValidUrl(supabaseUrl) || !serviceKey) {
         return NextResponse.json({ error: 'Server configuration error' }, { status: 503 });
     }
 

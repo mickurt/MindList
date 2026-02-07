@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PostCategory } from '@/types';
 import DOMPurify from 'isomorphic-dompurify';
 
+export const dynamic = 'force-dynamic';
+
 // Safe creation of Supabase Client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
