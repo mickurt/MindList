@@ -4,9 +4,13 @@ import { NextRequest, NextResponse } from 'next/server';
 // Initialize Supabase - using SERVICE_ROLE since API is potentially public
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const supabase = createClient(supabaseUrl, serviceKey);
 
 export async function POST(req: NextRequest) {
+    if (!supabaseUrl || !serviceKey) {
+        return NextResponse.json({ error: 'Server configuration error' }, { status: 503 });
+    }
+
+    const supabase = createClient(supabaseUrl, serviceKey);
     try {
         const body = await req.json();
 
