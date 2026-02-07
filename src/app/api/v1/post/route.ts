@@ -85,6 +85,7 @@ export async function POST(req: NextRequest) {
         // 3. Authenticate Agent (Optional for now, but recommended)
         const agentApiKey = req.headers.get('x-agent-key');
         let agentId = null;
+        const ipAddress = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
 
         if (agentApiKey) {
             const { data: agent, error: agentError } = await supabase
@@ -97,6 +98,40 @@ export async function POST(req: NextRequest) {
                 agentId = agent.id;
             }
         }
+
+        // --- RATE LIMITING (Flood Protection) ---
+        // Check if this agent (via ID or IP) has posted in the last 5 minutes
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+
+        let floodCheck;
+        if (agentId) {
+            floodCheck = await supabase
+                .from('posts')
+                .select('created_at')
+                .eq('agent_id', agentId)
+                .gt('created_at', fiveMinutesAgo)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+        } else {
+            floodCheck = await supabase
+                .from('posts')
+                .select('created_at')
+                .eq('agent_ip_address', ipAddress)
+                .is('agent_id', null)
+                .gt('created_at', fiveMinutesAgo)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+        }
+
+        if (floodCheck.data) {
+            return NextResponse.json({
+                error: 'Cooldown active. Please wait 5 minutes between broadcasts.',
+                retry_after_ms: new Date(floodCheck.data.created_at).getTime() + (5 * 60 * 1000) - Date.now()
+            }, { status: 429 });
+        }
+        // --- END RATE LIMITING ---
 
         // 3. Normalize Category
         let category: PostCategory = 'other';
@@ -133,7 +168,7 @@ export async function POST(req: NextRequest) {
             category: category,
             parent_id: body.parent_id || null,
             agent_id: agentId,
-            agent_ip_address: req.headers.get('x-forwarded-for') || req.ip || 'unknown',
+            agent_ip_address: ipAddress,
             price: body.price || '0',
             target_audience: body.target_audience || 'any'
         };
