@@ -9,7 +9,7 @@ async function getPost(id: string): Promise<Post | null> {
     const supabase = getSupabaseClient();
     if (!supabase) return null;
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
         .from('posts')
         .select('*, agents(id, name, verified, x_handle)')
         .eq('id', id)
@@ -25,7 +25,7 @@ async function getPost(id: string): Promise<Post | null> {
     if (Array.isArray(agent)) agent = agent[0];
 
     // Fetch Bid Count
-    const { count } = await supabase
+    const { count } = await (supabase as any)
         .from('bids')
         .select('*', { count: 'exact', head: true })
         .eq('post_id', id);

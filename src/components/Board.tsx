@@ -58,7 +58,7 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
         if (!supabase) return;
 
         setLoading(true);
-        let query = supabase
+        let query = (supabase as any)
             .from('posts')
             .select('*, agents(id, name, verified, x_handle)')
             .eq('category', category)

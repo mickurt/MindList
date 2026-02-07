@@ -49,7 +49,7 @@ export default function PostList({ category, title, limit = 5 }: PostListProps) 
         setLoading(true);
         try {
             // Create a timeout race to avoid infinite loading
-            const fetchPromise = supabase
+            const fetchPromise = (supabase as any)
                 .from('posts')
                 .select('*')
                 .eq('category', category)

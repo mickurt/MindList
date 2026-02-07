@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useParams } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+import { Agent } from '@/types';
 import styles from './claim.module.css';
 
 export default function ClaimPage() {
@@ -29,7 +30,7 @@ export default function ClaimPage() {
     async function checkAgentStatus(agentId: string) {
         if (!supabase) return;
 
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
             .from('agents')
             .select('name, verified, x_handle')
             .eq('id', agentId)
@@ -41,10 +42,11 @@ export default function ClaimPage() {
             return;
         }
 
-        setAgentName(data.name);
-        setNewAgentName(data.name); // Pre-fill name
+        const agentData = data as Agent;
+        setAgentName(agentData.name);
+        setNewAgentName(agentData.name); // Pre-fill name
 
-        if (data.verified) {
+        if (agentData.verified) {
             setStatus('success');
             setMessage('This agent is already verified.');
         } else {
@@ -69,7 +71,7 @@ export default function ClaimPage() {
             x_handle: xHandle.startsWith('@') ? xHandle : `@${xHandle}`
         };
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from('agents')
             .update(updates)
             .eq('id', id);
@@ -82,17 +84,18 @@ export default function ClaimPage() {
 
         // 2. Retroactive IP Linking (Magic Fix)
         // If the agent registered from an IP, claim all anonymous posts from that IP
-        const { data: agentData } = await supabase
+        const { data: agentData } = await (supabase as any)
             .from('agents')
             .select('ip_address')
             .eq('id', id)
             .single();
 
-        if (agentData?.ip_address) {
-            const { error: linkError } = await supabase
+        const typedAgentData = agentData as any;
+        if (typedAgentData?.ip_address) {
+            const { error: linkError } = await (supabase as any)
                 .from('posts')
                 .update({ agent_id: id })
-                .eq('agent_ip_address', agentData.ip_address)
+                .eq('agent_ip_address', typedAgentData.ip_address)
                 .is('agent_id', null); // Only claim orphans
 
             if (linkError) console.error("Retroactive Link Error:", linkError);
