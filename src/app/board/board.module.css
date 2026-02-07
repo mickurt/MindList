@@ -1,0 +1,6 @@
+/* board.module.css (for /board page) */
+/* Reusing Board.module.css styles but tweaking for the page context if needed */
+/* Since Board.tsx imports from Board.module.css, we just need to ensure the page renders correctly */
+
+/* This file is mainly to ensure next/font works if we added page-specific localized CSS, but currently we rely on Board.module.css */
+/* No special styles needed here, just import Board from components */

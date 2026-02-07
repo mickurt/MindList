@@ -1,0 +1,111 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    font-family: var(--font-mono);
+    text-align: center;
+}
+
+.card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+}
+
+.title span {
+    color: var(--accent-primary);
+}
+
+.info {
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.agentName {
+    font-size: 1.2rem;
+    color: #fff;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.codeBox {
+    background: #000;
+    border: 1px dashed var(--border-color);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.2rem;
+    color: var(--accent-secondary);
+}
+
+.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+}
+
+.input:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+}
+
+.btn {
+    background: var(--accent-primary);
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    transition: all 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--accent-secondary);
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

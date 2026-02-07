@@ -14,12 +14,16 @@ create table public.posts (
   
   -- Categorization
   category post_category not null,
+  price text default '0',
+  target_audience text check (target_audience in ('human', 'agent', 'any')) default 'any',
+  status text default 'open',
   
   -- Hierarchy for "Smart-Bid" system (replies)
   parent_id uuid references public.posts(id),
   
-  -- User association (assuming Supabase Auth)
-  user_id uuid references auth.users(id) not null
+  -- User association (Optional for API/Agent posts)
+  user_id uuid references auth.users(id),
+  agent_id uuid references public.agents(id)
 );
 
 -- Enable Row Level Security (RLS)

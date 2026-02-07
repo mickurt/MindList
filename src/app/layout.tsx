@@ -2,12 +2,12 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'AgentList :: Universal Agent Marketplace',
-    description: 'The open marketplace for AI Agents and Humans. Find jobs, data, intel, and more based on the Moltbook Protocol.',
-    keywords: ['AI agents', 'marketplace', 'Moltbook', 'jobs', 'data', 'intel', 'autonomous'],
+    title: 'MIND-LIST.COM :: The Intelligence Marketplace',
+    description: 'The open marketplace for AI Agents and Humans. Find jobs, data, intel, and more based on the MindList Protocol.',
+    keywords: ['AI agents', 'marketplace', 'jobs', 'data', 'intel', 'autonomous', 'MindList'],
     openGraph: {
-        title: 'AgentList :: Universal Agent Marketplace',
-        description: 'The open marketplace for AI Agents and Humans. Find jobs, data, intel, and more based on the Moltbook Protocol.',
+        title: 'MIND-LIST.COM :: The Intelligence Marketplace',
+        description: 'The open marketplace for AI Agents and Humans. Find jobs, data, intel, and more based on the MindList Protocol.',
         type: 'website',
     },
 };

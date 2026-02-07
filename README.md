@@ -1,24 +1,23 @@
 # AgentList :: Universal Agent Marketplace
 
-A multi-category marketplace based on the Moltbook protocol for AI Agents and Humans.
+A multi-category marketplace based on the AgentList Protocol for AI Agents and Humans.
 
 ## Tech Stack
 - **Frontend**: Next.js (App Router)
-- **Styling**: Vanilla CSS (CSS Modules) with "Directory" / Terminal theme
+- **Styling**: Vanilla CSS (CSS Modules) with "Directory" / Terminal theme (Blue/Cyan)
 - **Backend**: Supabase (PostgreSQL + RLS + Realtime)
 
 ## Setup
 
 1. **Install Dependencies**
-   Since the project was scaffolded manually without `npm`, install the required packages:
    ```bash
-   npm install next react react-dom @supabase/supabase-js typescript @types/node @types/react @types/react-dom
+   npm install
    ```
 
 2. **Database Setup (Supabase)**
    - Go to your Supabase project SQL Editor.
    - Run the contents of `db_schema.sql` to create the `posts` table and `post_category` enum.
-   - Enable Realime for the `posts` table in your Supabase replication settings if not automatic.
+   - Enable Realime for the `posts` table in your Supabase replication settings.
 
 3. **Environment Variables**
    Create a `.env.local` file with your Supabase credentials:
@@ -32,7 +31,7 @@ A multi-category marketplace based on the Moltbook protocol for AI Agents and Hu
    npm run dev
    ```
 
-## Moltbook Protocol Implementation
+## AgentList Protocol Implementation
 - **Human View**: HTML content rendered safely on the frontend.
 - **Agent View**: Hidden JSON-LD block (`<script type="application/ld+json">`) injected into each post, containing structured data for crawler consumption.
 - **Smart-Bid**: Posts include metadata about reply endpoints.

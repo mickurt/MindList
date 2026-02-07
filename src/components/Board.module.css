@@ -1,70 +1,110 @@
 /* Board.module.css */
 
 .boardContainer {
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #0d0d0d;
-  color: #33ff33; /* Classic terminal green */
+  background-color: var(--bg-color);
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
-.header {
-  border-bottom: 2px solid #336633;
-  padding-bottom: 1rem;
+.siteHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
   margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color);
+  width: 100%;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-shadow: 0 0 5px #33ff33;
+.logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo span {
+  color: var(--accent-primary);
 }
 
 .nav {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-left: auto;
+  /* Push nav to right */
 }
 
 .navItem {
   background: transparent;
-  color: #336633;
-  border: 1px solid #336633;
+  color: var(--text-secondary);
   padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: bold;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
   transition: all 0.2s ease;
-  text-transform: uppercase;
+  border: 1px solid transparent;
 }
 
-.navItem:hover, .navItemActive {
-  color: #0d0d0d;
-  background-color: #33ff33;
-  border-color: #33ff33;
-  box-shadow: 0 0 10px #33ff33;
+.filterBar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+  width: 100%;
+  align-items: center;
+}
+
+.audienceButton {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.6;
+}
+
+.audienceButton:hover {
+  opacity: 1;
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.audienceActive {
+  opacity: 1;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  font-weight: bold;
+}
+
+.navItem:hover {
+  background-color: #222;
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.navItemActive {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-color) 100%);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
 }
 
 .main {
   flex: 1;
-}
-
-.loading {
-  animation: pulse 1.5s infinite;
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 1.2rem;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
 }
 
 .feed {
@@ -74,59 +114,57 @@
 }
 
 .emptyState {
-  opacity: 0.5;
+  color: var(--text-secondary);
   text-align: center;
-  padding: 2rem;
-  border: 1px dashed #336633;
+  padding: 4rem;
+  font-family: var(--font-mono);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius);
 }
 
+/* Post Card Styles */
 .post {
-  border: 1px solid #1a331a;
-  background-color: #0d0d0d;
-  padding: 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.5rem;
   position: relative;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .post:hover {
-  border-color: #33ff33;
-  background-color: #0f1a0f;
+  transform: translateY(-2px);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .postMeta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.75rem;
-  color: #336633;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-.postContent {
-  /* Basic markdown styling for the content */
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  font-family: var(--font-mono);
 }
 
 .postTitle {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: #ccffcc;
-}
-
-.postTitle a {
-  text-decoration: none;
-  color: inherit;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  line-height: 1.3;
 }
 
 .postTitle a:hover {
   text-decoration: underline;
-  color: #33ff33;
+  text-decoration-color: var(--accent-primary);
+  color: var(--text-primary);
 }
 
 .postBody {
-  font-size: 0.9rem;
-  color: #99cc99;
-  line-height: 1.4;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -134,36 +172,150 @@
   -webkit-box-orient: vertical;
 }
 
-/* Agent Metadata - Hidden visually but accessible */
-.agent-metadata-block {
-  display: none; /* Although JSON-LD script tags are naturally hidden, we ensure styles don't conflict */
-}
-
 /* Smart-Bid Badge */
 .smartBidBadge {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-size: 0.6rem;
-  background-color: #003300;
-  color: #33ff33;
-  border: 1px solid #336633;
-  padding: 0.1rem 0.3rem;
-  opacity: 0;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.7rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  border: 1px solid var(--accent-primary);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  opacity: 0.8;
   transition: opacity 0.2s ease;
-  pointer-events: none;
 }
 
 .post:hover .smartBidBadge {
   opacity: 1;
+  background: var(--accent-secondary);
+  background-clip: padding-box;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  color: #000;
+  border-color: var(--accent-secondary);
 }
 
 .footer {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid #1a331a;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
-  font-size: 0.75rem;
-  color: #336633;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* MODAL STYLES */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modalContent {
+  background-color: var(--bg-color);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 50px rgba(59, 130, 246, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-color) 100%);
+  position: sticky;
+  top: 0;
+}
+
+.modalTitle {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.closeButton {
+  background: transparent;
+  color: var(--accent-primary);
+  font-weight: bold;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.closeButton:hover {
+  text-decoration: underline;
+}
+
+.modalBody {
+  padding: 2rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.modalSection {
+  margin-bottom: 2rem;
+}
+
+.modalSectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modalSectionTitle::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 16px;
+  background: var(--accent-gradient);
+  border-radius: 2px;
+}
+
+.authorInfo {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-color);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.authorLink {
+  color: var(--accent-secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.authorLink:hover {
+  text-decoration: underline;
 }
