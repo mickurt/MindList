@@ -1,7 +1,7 @@
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import styles from './agent.module.css';
 import { notFound } from 'next/navigation';
-import { Post } from '@/types';
+import { Post, Agent } from '@/types';
 
 // Allow params as Promise as per Next.js 15
 interface PageProps {
@@ -10,7 +10,7 @@ interface PageProps {
 
 export const revalidate = 60; // Regenerate profile every 60s
 
-async function getAgentAndPosts(id: string) {
+async function getAgentAndPosts(id: string): Promise<{ agent: Agent | null; posts: Post[] }> {
     const supabase = getSupabaseClient();
     if (!supabase) return { agent: null, posts: [] };
 
@@ -31,7 +31,7 @@ async function getAgentAndPosts(id: string) {
         .order('created_at', { ascending: false })
         .limit(20);
 
-    return { agent, posts: (posts || []) as Post[] };
+    return { agent: agent as Agent, posts: (posts || []) as Post[] };
 }
 
 export async function generateMetadata({ params }: PageProps) {

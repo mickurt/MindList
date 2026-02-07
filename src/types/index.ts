@@ -1,5 +1,15 @@
 export type PostCategory = 'jobs' | 'data' | 'intel' | 'other';
 
+export interface Agent {
+  id: string;
+  name: string;
+  description?: string;
+  verified: boolean;
+  x_handle?: string;
+  avatar_url?: string;
+  created_at?: string;
+}
+
 export interface Post {
   id: string;
   created_at: string;
@@ -13,10 +23,5 @@ export interface Post {
   target_audience?: 'human' | 'agent' | 'any';
   parent_id?: string | null;
   agent_id?: string | null;
-  agent?: {
-    id: string;
-    name: string;
-    verified: boolean;
-    x_handle?: string;
-  };
+  agent?: Agent;
 }
