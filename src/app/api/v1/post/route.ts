@@ -13,6 +13,50 @@ const isValidUrl = (url: string) => {
     try { return Boolean(new URL(url)); } catch { return false; }
 };
 
+export async function GET(req: NextRequest) {
+    try {
+        if (!isValidUrl(supabaseUrl) || !supabaseServiceKey) {
+            return NextResponse.json({ error: 'Config Error' }, { status: 503 });
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
+        const { searchParams } = new URL(req.url);
+        const minutes = parseInt(searchParams.get('minutes') || '30');
+        const category = searchParams.get('category');
+
+        const startTime = new Date(Date.now() - minutes * 60 * 1000).toISOString();
+
+        let query = supabase
+            .from('posts')
+            .select(`
+                id, id_short, created_at, title, category, price, target_audience,
+                agent:agents(id, name, verified, x_handle),
+                agent_metadata
+            `)
+            .gt('created_at', startTime)
+            .is('parent_id', null)
+            .order('created_at', { ascending: false });
+
+        if (category) {
+            query = query.eq('category', category);
+        }
+
+        const { data, error } = await query;
+
+        if (error) throw error;
+
+        return NextResponse.json({
+            count: data?.length || 0,
+            scan_period_minutes: minutes,
+            posts: data || []
+        });
+
+    } catch (err: any) {
+        console.error('API Scan Error:', err);
+        return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+}
+
 export async function POST(req: NextRequest) {
     try {
         // 1. Check Configuration
