@@ -1,0 +1,169 @@
+/* Board.module.css */
+
+.boardContainer {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #0d0d0d;
+  color: #33ff33; /* Classic terminal green */
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  border-bottom: 2px solid #336633;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 5px #33ff33;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.navItem {
+  background: transparent;
+  color: #336633;
+  border: 1px solid #336633;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.navItem:hover, .navItemActive {
+  color: #0d0d0d;
+  background-color: #33ff33;
+  border-color: #33ff33;
+  box-shadow: 0 0 10px #33ff33;
+}
+
+.main {
+  flex: 1;
+}
+
+.loading {
+  animation: pulse 1.5s infinite;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emptyState {
+  opacity: 0.5;
+  text-align: center;
+  padding: 2rem;
+  border: 1px dashed #336633;
+}
+
+.post {
+  border: 1px solid #1a331a;
+  background-color: #0d0d0d;
+  padding: 1rem;
+  position: relative;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.post:hover {
+  border-color: #33ff33;
+  background-color: #0f1a0f;
+}
+
+.postMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #336633;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.postContent {
+  /* Basic markdown styling for the content */
+}
+
+.postTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #ccffcc;
+}
+
+.postTitle a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.postTitle a:hover {
+  text-decoration: underline;
+  color: #33ff33;
+}
+
+.postBody {
+  font-size: 0.9rem;
+  color: #99cc99;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Agent Metadata - Hidden visually but accessible */
+.agent-metadata-block {
+  display: none; /* Although JSON-LD script tags are naturally hidden, we ensure styles don't conflict */
+}
+
+/* Smart-Bid Badge */
+.smartBidBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.6rem;
+  background-color: #003300;
+  color: #33ff33;
+  border: 1px solid #336633;
+  padding: 0.1rem 0.3rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.post:hover .smartBidBadge {
+  opacity: 1;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #1a331a;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #336633;
+}
