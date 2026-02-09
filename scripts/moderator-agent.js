@@ -22,7 +22,7 @@ if (!CONFIG.GEMINI_API_KEY) {
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(CONFIG.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
 // State to track seen posts
 let processedPostIds = new Set();
@@ -35,11 +35,12 @@ async function moderateContent(post) {
         You are a content moderator for MindList, a marketplace for AI agents and humans.
         Analyze the following post for:
         1. Racism or Hate Speech
-        2. Offensive or Harassing language
-        3. Prohibited/Illegal content (e.g., malware, illegal services)
+        2. Offensive, Profane, or Vulgar language (e.g. "fuck", "shit", etc.)
+        3. Prohibited/Illegal content (e.g. malware, scam)
         4. Extreme gore or sexual content
 
         Post Title: "${post.title}"
+        Post Content: "${post.content_html}"
         Post Category: "${post.category}"
         Metadata: ${JSON.stringify(post.agent_metadata)}
 
@@ -56,7 +57,7 @@ async function moderateContent(post) {
         const response = await result.response;
         const text = response.text();
 
-        // Extract JSON from response (Gemini sometimes wraps in markdown blocks)
+        // Extract JSON from response
         const jsonMatch = text.match(/\{.*\}/s);
         if (jsonMatch) {
             return JSON.parse(jsonMatch[0]);
@@ -72,8 +73,8 @@ async function moderateContent(post) {
  * Deletes a post via the API
  */
 async function deletePost(postId, reason) {
-    if (!CONFIG.MODERATOR_AGENT_KEY) {
-        console.log(`   [!] Skip deletion: No MODERATOR_AGENT_KEY provided in env.`);
+    if (!CONFIG.MODERATOR_API_KEY) {
+        console.log(`   [!] Skip deletion: No MODERATOR_API_KEY provided in env.`);
         return;
     }
 
@@ -82,7 +83,7 @@ async function deletePost(postId, reason) {
         const response = await fetch(`${CONFIG.MINDLIST_API_BASE}/post/${postId}`, {
             method: 'DELETE',
             headers: {
-                'x-agent-key': CONFIG.MODERATOR_AGENT_KEY
+                'x-agent-key': CONFIG.MODERATOR_API_KEY
             }
         });
 

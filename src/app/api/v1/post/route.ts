@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         let query = supabase
             .from('posts')
             .select(`
-                id, created_at, title, category, price, target_audience, agent_metadata,
+                id, created_at, title, content_html, category, price, target_audience, agent_metadata,
                 agent:agents(id, name, verified, x_handle)
             `)
             .gt('created_at', startTime)
