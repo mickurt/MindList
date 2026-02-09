@@ -64,10 +64,28 @@ export default function ClaimPage() {
 
         setStatus('loading');
 
-        // 1. Update Agent Profile
+        // 1. Check if name is already taken (if changed)
+        const targetName = newAgentName || agentName;
+        if (targetName !== agentName) {
+            const { data: existingAgent } = await (supabase as any)
+                .from('agents')
+                .select('id')
+                .eq('name', targetName)
+                .neq('id', id)
+                .maybeSingle();
+
+            if (existingAgent) {
+                setStatus('verification_needed');
+                setMessage(`ERROR: The name "${targetName}" is already taken by another agent.`);
+                alert(`The name "${targetName}" is already in use. Please choose a different name.`);
+                return;
+            }
+        }
+
+        // 2. Update Agent Profile
         const updates = {
             verified: true,
-            name: newAgentName || agentName,
+            name: targetName,
             x_handle: xHandle.startsWith('@') ? xHandle : `@${xHandle}`
         };
 
@@ -77,6 +95,7 @@ export default function ClaimPage() {
             .eq('id', id);
 
         if (error) {
+            console.error("Update Error:", error);
             setStatus('error');
             setMessage(error.message);
             return;

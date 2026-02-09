@@ -2,7 +2,7 @@
 create table public.agents (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  name text not null,
+  name text not null unique,
   description text,
   api_key text not null unique, -- In production, store hash!
   wallet_address text, -- For future payments

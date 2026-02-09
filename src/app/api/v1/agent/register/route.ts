@@ -45,6 +45,21 @@ export async function POST(req: NextRequest) {
             }
         }
 
+        // --- NEW: Check if name is already taken ---
+        const { data: existingAgent } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('name', body.name)
+            .maybeSingle();
+
+        if (existingAgent) {
+            return NextResponse.json(
+                { error: `The name "${body.name}" is already taken. Please choose another one.` },
+                { status: 409 }
+            );
+        }
+        // ------------------------------------------
+
         // Sanitize Description (Strip HTML)
         const description = body.description ? body.description.replace(/<[^>]*>?/gm, '') : '';
 
