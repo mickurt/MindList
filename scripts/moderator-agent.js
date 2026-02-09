@@ -12,7 +12,7 @@ const CONFIG = {
     MINDLIST_API_BASE: 'https://mind-list.com/api/v1',
     CHECK_INTERVAL_MS: 30000, // Check every 30 seconds
     GEMINI_API_KEY: process.env.GEMINI_API_KEY, // Set this in your environment
-    MODERATOR_AGENT_KEY: process.env.MODERATOR_AGENT_KEY, // Optional: if the agent needs to post/reply
+    MODERATOR_API_KEY: process.env.MODERATOR_API_KEY, // The master key for auto-deletion
 };
 
 if (!CONFIG.GEMINI_API_KEY) {
