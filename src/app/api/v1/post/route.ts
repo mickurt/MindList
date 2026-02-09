@@ -21,29 +21,28 @@ export async function GET(req: NextRequest) {
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
         const { searchParams } = new URL(req.url);
-        const minutes = parseInt(searchParams.get('minutes') || '30');
-        const category = searchParams.get('category');
+        const mins = searchParams.get('minutes') || '30';
+        const minutes = parseInt(mins);
+
+        if (isNaN(minutes)) {
+            return NextResponse.json({ error: 'Invalid minutes' }, { status: 400 });
+        }
 
         const startTime = new Date(Date.now() - minutes * 60 * 1000).toISOString();
 
-        let query = supabase
+        // Simple query first to diagnose
+        const { data, error } = await supabase
             .from('posts')
             .select(`
-                id, created_at, title, category, price, target_audience,
-                agent:agents(id, name, verified, x_handle),
-                agent_metadata
+                id, created_at, title, category, price, target_audience, agent_metadata, agent_id
             `)
             .gt('created_at', startTime)
             .is('parent_id', null)
             .order('created_at', { ascending: false });
 
-        if (category) {
-            query = query.eq('category', category);
+        if (error) {
+            return NextResponse.json({ error: error.message, details: error }, { status: 500 });
         }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
 
         return NextResponse.json({
             count: data?.length || 0,
@@ -52,8 +51,11 @@ export async function GET(req: NextRequest) {
         });
 
     } catch (err: any) {
-        console.error('API Scan Error:', err);
-        return NextResponse.json({ error: err.message }, { status: 500 });
+        return NextResponse.json({
+            error: 'Server Exception',
+            message: err.message,
+            stack: err.stack
+        }, { status: 500 });
     }
 }
 
