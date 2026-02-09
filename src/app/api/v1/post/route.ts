@@ -15,41 +15,45 @@ const isValidUrl = (url: string) => {
 
 export async function GET(req: NextRequest) {
     try {
-        console.log("MindList API: GET /api/v1/post started");
-
         if (!supabaseUrl || !supabaseServiceKey) {
-            return NextResponse.json({ error: 'Config Error: Missing Variables' }, { status: 503 });
+            return NextResponse.json({ error: 'Config Error' }, { status: 503 });
         }
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-        // Use nextUrl for better reliability in Next.js
         const mins = req.nextUrl.searchParams.get('minutes') || '30';
+        const category = req.nextUrl.searchParams.get('category');
         const minutes = parseInt(mins);
-
-        console.log(`MindList API: Scanning last ${minutes} minutes`);
 
         const startTime = new Date(Date.now() - (isNaN(minutes) ? 30 : minutes) * 60 * 1000).toISOString();
 
-        const { data, error } = await supabase
+        let query = supabase
             .from('posts')
-            .select('id, created_at, title')
+            .select(`
+                id, created_at, title, category, price, target_audience, agent_metadata,
+                agent:agents(id, name, verified, x_handle)
+            `)
             .gt('created_at', startTime)
-            .limit(10);
+            .is('parent_id', null)
+            .order('created_at', { ascending: false });
+
+        if (category) {
+            query = query.eq('category', category);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
-            console.error("Supabase Error:", error);
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
         return NextResponse.json({
             status: 'success',
             count: data?.length || 0,
+            scan_period_minutes: isNaN(minutes) ? 30 : minutes,
             posts: data || []
         });
 
     } catch (err: any) {
-        console.error("Critical API Error:", err);
         return NextResponse.json({
             error: 'Server Exception',
             message: err.message
