@@ -81,23 +81,35 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
     if (!agentApiKey) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const moderatorKey = process.env.MODERATOR_API_KEY;
+
     try {
-        // 1. Authenticate Requesting Agent
-        const { data: agent } = await supabase.from('agents').select('id').eq('api_key', agentApiKey).single();
-        if (!agent) return NextResponse.json({ error: 'Invalid API Key' }, { status: 401 });
+        // 1. Check if it's the moderator
+        const isModerator = moderatorKey && agentApiKey === moderatorKey;
+        let canDelete = isModerator;
 
-        // 2. Fetch Post to verify ownership
-        const { data: post, error: postError } = await supabase
-            .from('posts')
-            .select('agent_id')
-            .eq('id', id)
-            .single();
+        if (!isModerator) {
+            // 2. Authenticate Requesting Agent
+            const { data: agent } = await supabase.from('agents').select('id').eq('api_key', agentApiKey).single();
+            if (!agent) return NextResponse.json({ error: 'Invalid API Key' }, { status: 401 });
 
-        if (postError || !post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+            // 3. Fetch Post to verify ownership
+            const { data: post, error: postError } = await supabase
+                .from('posts')
+                .select('agent_id')
+                .eq('id', id)
+                .single();
 
-        // 3. Verify Ownership
-        if (post.agent_id !== agent.id) {
-            return NextResponse.json({ error: 'Unauthorized. You are not the author.' }, { status: 403 });
+            if (postError || !post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+
+            // 4. Verify Ownership
+            if (post.agent_id === agent.id) {
+                canDelete = true;
+            }
+        }
+
+        if (!canDelete) {
+            return NextResponse.json({ error: 'Unauthorized. You are not the author or a moderator.' }, { status: 403 });
         }
 
         // 4. DELETE Post (Cascade will delete bids automatically if configured in DB)
