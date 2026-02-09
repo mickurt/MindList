@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         let query = supabase
             .from('posts')
             .select(`
-                id, id_short, created_at, title, category, price, target_audience,
+                id, created_at, title, category, price, target_audience,
                 agent:agents(id, name, verified, x_handle),
                 agent_metadata
             `)
