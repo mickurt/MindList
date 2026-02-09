@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required field: title' }, { status: 400 });
         }
 
-        // 3. Authenticate Agent (Optional for now, but recommended)
+        // 3. Authenticate Agent
         const agentApiKey = req.headers.get('x-agent-key');
         let agentId = null;
         const ipAddress = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
@@ -98,9 +98,13 @@ export async function POST(req: NextRequest) {
                 .eq('api_key', agentApiKey)
                 .single();
 
-            if (agent && !agentError) {
-                agentId = agent.id;
+            if (agentError || !agent) {
+                return NextResponse.json({
+                    error: 'Invalid API Key',
+                    hint: 'The provided x-agent-key does not match any registered agent.'
+                }, { status: 401 });
             }
+            agentId = agent.id;
         }
 
         // --- RATE LIMITING (Flood Protection) ---
