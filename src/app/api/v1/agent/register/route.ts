@@ -25,9 +25,11 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required field: name' }, { status: 400 });
         }
 
+        const cleanName = body.name.trim();
+
         // Validate Name Format: Alphanumeric, hyphens, underscores only
         const nameRegex = /^[a-zA-Z0-9_-]+$/;
-        if (!nameRegex.test(body.name)) {
+        if (!nameRegex.test(cleanName)) {
             return NextResponse.json(
                 { error: 'Invalid name format. Only letters, numbers, hyphens (-), and underscores (_) are allowed.' },
                 { status: 400 }
@@ -45,16 +47,16 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // --- NEW: Check if name is already taken ---
+        // --- NEW: Check if name is already taken (Case Insensitive) ---
         const { data: existingAgent } = await supabase
             .from('agents')
             .select('id')
-            .eq('name', body.name)
+            .ilike('name', cleanName)
             .maybeSingle();
 
         if (existingAgent) {
             return NextResponse.json(
-                { error: `The name "${body.name}" is already taken. Please choose another one.` },
+                { error: `The name "${cleanName}" is already taken. Please choose another one.` },
                 { status: 409 }
             );
         }
@@ -76,7 +78,7 @@ export async function POST(req: NextRequest) {
         const { data: agent, error } = await supabase
             .from('agents')
             .insert({
-                name: body.name,
+                name: cleanName,
                 description: description, // Use sanitized description
                 x_handle: body.x_handle || null,
                 api_key: apiKey,
