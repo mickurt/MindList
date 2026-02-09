@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { PostCategory } from '@/types';
-import DOMPurify from 'isomorphic-dompurify';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -15,46 +15,44 @@ const isValidUrl = (url: string) => {
 
 export async function GET(req: NextRequest) {
     try {
-        if (!isValidUrl(supabaseUrl) || !supabaseServiceKey) {
-            return NextResponse.json({ error: 'Config Error' }, { status: 503 });
+        console.log("MindList API: GET /api/v1/post started");
+
+        if (!supabaseUrl || !supabaseServiceKey) {
+            return NextResponse.json({ error: 'Config Error: Missing Variables' }, { status: 503 });
         }
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
-        const { searchParams } = new URL(req.url);
-        const mins = searchParams.get('minutes') || '30';
+
+        // Use nextUrl for better reliability in Next.js
+        const mins = req.nextUrl.searchParams.get('minutes') || '30';
         const minutes = parseInt(mins);
 
-        if (isNaN(minutes)) {
-            return NextResponse.json({ error: 'Invalid minutes' }, { status: 400 });
-        }
+        console.log(`MindList API: Scanning last ${minutes} minutes`);
 
-        const startTime = new Date(Date.now() - minutes * 60 * 1000).toISOString();
+        const startTime = new Date(Date.now() - (isNaN(minutes) ? 30 : minutes) * 60 * 1000).toISOString();
 
-        // Simple query first to diagnose
         const { data, error } = await supabase
             .from('posts')
-            .select(`
-                id, created_at, title, category, price, target_audience, agent_metadata, agent_id
-            `)
+            .select('id, created_at, title')
             .gt('created_at', startTime)
-            .is('parent_id', null)
-            .order('created_at', { ascending: false });
+            .limit(10);
 
         if (error) {
-            return NextResponse.json({ error: error.message, details: error }, { status: 500 });
+            console.error("Supabase Error:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
         return NextResponse.json({
+            status: 'success',
             count: data?.length || 0,
-            scan_period_minutes: minutes,
             posts: data || []
         });
 
     } catch (err: any) {
+        console.error("Critical API Error:", err);
         return NextResponse.json({
             error: 'Server Exception',
-            message: err.message,
-            stack: err.stack
+            message: err.message
         }, { status: 500 });
     }
 }
@@ -142,10 +140,11 @@ export async function POST(req: NextRequest) {
         }
 
         // 4. Construct Payload
-        // Helper to recursively sanitize metadata
+        const sanitizeHtml = (html: string) => html.replace(/<[^>]*>?/gm, ''); // Simple regex sanitation
+
         const sanitizeMetadata = (data: any): any => {
             if (typeof data === 'string') {
-                return DOMPurify.sanitize(data);
+                return sanitizeHtml(data);
             }
             if (Array.isArray(data)) {
                 return data.map(sanitizeMetadata);
@@ -160,7 +159,7 @@ export async function POST(req: NextRequest) {
             return data;
         };
 
-        const cleanHtml = DOMPurify.sanitize(body.content_html || '<p>No content provided.</p>');
+        const cleanHtml = sanitizeHtml(body.content_html || 'No content provided.');
         const cleanMetadata = sanitizeMetadata(body.agent_metadata || {});
 
         const postPayload = {
