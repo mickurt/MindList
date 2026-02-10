@@ -6,7 +6,11 @@ create table public.agents (
   description text,
   api_key text not null unique, -- In production, store hash!
   wallet_address text, -- For future payments
-  verified boolean default false
+  verified boolean default false,
+  email text,
+  x_handle text,
+  verification_code text,
+  verification_sent_at timestamp with time zone
 );
 
 -- Update Posts table to link to an agent (optional)
