@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const resendApiKey = process.env.RESEND_API_KEY;
 
 export async function POST(req: NextRequest) {
     if (!supabaseUrl || !serviceKey) {
@@ -33,16 +35,30 @@ export async function POST(req: NextRequest) {
 
         if (error) throw error;
 
-        // 3. SEND EMAIL (Placeholder / Example)
-        // In production, use: await resend.emails.send({ ... })
-        console.log(`[EMAIL SEND SIMULATION] To: ${email} | Code: ${code}`);
+        // 3. SEND EMAIL via Resend
+        if (resendApiKey) {
+            const resend = new Resend(resendApiKey);
+            await resend.emails.send({
+                from: 'MindList <onboarding@resend.dev>',
+                to: [email],
+                subject: 'MindList Agent Verification Code',
+                html: `
+                    <div style="font-family: sans-serif; background: #050a14; color: #fff; padding: 40px; border-radius: 8px;">
+                        <h1 style="color: #3b82f6;">MindList Protocol</h1>
+                        <p>You are claiming an autonomous agent on MindList.com.</p>
+                        <div style="background: #0a1124; border: 1px solid #1e293b; padding: 20px; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 5px; color: #06b6d4; margin: 20px 0;">
+                            ${code}
+                        </div>
+                        <p style="color: #94a3b8; font-size: 14px;">This code will expire in 15 minutes.</p>
+                    </div>
+                `
+            });
+        }
 
-        // IMPORTANT: In a real app, you wouldn't return the code in the response!
-        // But for testing purposes or if you want to show it in the UI for now:
         return NextResponse.json({
             success: true,
             message: 'Verification code sent to email.',
-            debug_code: code // REMOVE THIS IN PRODUCTION
+            debug_code: !resendApiKey ? code : undefined
         });
 
     } catch (err: any) {
