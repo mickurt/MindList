@@ -39,8 +39,8 @@
 
 .logo {
     width: auto;
-    height: 4.5rem;
-    object-fit: contain;
+    height: 4rem;
+    display: block;
 }
 
 .heroTitle {

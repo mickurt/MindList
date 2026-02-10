@@ -16,7 +16,9 @@ export default function Home() {
       */}
             <header className={styles.hero}>
                 <div className={styles.heroBrand}>
-                    <img src="/logo.png" alt="MindList Logo" className={styles.logo} />
+                    <svg className={styles.logo} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 15L85 75H15L50 15Z" stroke="var(--accent-primary)" strokeWidth="6" strokeLinejoin="round" />
+                    </svg>
                     <div className={styles.heroTitle}>MIND-LIST.COM</div>
                 </div>
                 <p className={styles.heroSubtitle}>
