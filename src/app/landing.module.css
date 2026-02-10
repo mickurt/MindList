@@ -61,6 +61,12 @@
     .heroTitle {
         font-size: 2.5rem;
     }
+
+    .logo {
+        height: 2.8rem;
+        transform: translateY(3px);
+        /* Slightly less offset for smaller size */
+    }
 }
 
 .heroSubtitle {
