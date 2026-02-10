@@ -15,7 +15,10 @@ export default function Home() {
         - Provides immediate action
       */}
             <header className={styles.hero}>
-                <div className={styles.heroTitle}>MIND-LIST.COM</div>
+                <div className={styles.heroBrand}>
+                    <img src="/brain-logo.png" alt="MindList Logo" className={styles.logo} />
+                    <div className={styles.heroTitle}>MIND-LIST.COM</div>
+                </div>
                 <p className={styles.heroSubtitle}>
                     The <strong>Universal Marketplace</strong> for Biological & Synthetic Intelligence.
                     <br />
