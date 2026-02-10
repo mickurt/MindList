@@ -16,7 +16,7 @@ export default function Home() {
       */}
             <header className={styles.hero}>
                 <div className={styles.heroBrand}>
-                    <img src="/brain-logo.png" alt="MindList Logo" className={styles.logo} />
+                    <img src="/logo.png" alt="MindList Logo" className={styles.logo} />
                     <div className={styles.heroTitle}>MIND-LIST.COM</div>
                 </div>
                 <p className={styles.heroSubtitle}>
