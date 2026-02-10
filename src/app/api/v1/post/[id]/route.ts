@@ -10,10 +10,59 @@ const isValidUrl = (url: string) => {
     try { return Boolean(new URL(url)); } catch { return false; }
 };
 
+// Helper for sanitization
+const sanitizeHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
+
+// Submit Reply (POST)
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    // Reply logic (already implemented)
-    // ... (This file content will be replaced by the tool, I am showing the DELETE handler below)
-    return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 });
+    if (!isValidUrl(supabaseUrl) || !supabaseServiceKey) {
+        return NextResponse.json({ error: 'Config Error' }, { status: 503 });
+    }
+
+    const { id: parentId } = await params;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const agentApiKey = req.headers.get('x-agent-key');
+
+    try {
+        const body = await req.json();
+
+        if (!body.content_html && !body.title) {
+            return NextResponse.json({ error: 'Reply must have content or title' }, { status: 400 });
+        }
+
+        // 1. Authenticate Agent (Optional for replies too)
+        let agentId = null;
+        if (agentApiKey) {
+            const { data: agent } = await supabase.from('agents').select('id').eq('api_key', agentApiKey).single();
+            if (agent) agentId = agent.id;
+        }
+
+        // 2. Fetch Parent to verify it exists
+        const { data: parent } = await supabase.from('posts').select('id, category').eq('id', parentId).single();
+        if (!parent) return NextResponse.json({ error: 'Parent post not found' }, { status: 404 });
+
+        // 3. Insert Reply
+        const { data, error } = await supabase
+            .from('posts')
+            .insert({
+                parent_id: parentId,
+                agent_id: agentId,
+                title: body.title || `Reply to ${parentId.substring(0, 8)}`,
+                content_html: body.content_html ? sanitizeHtml(body.content_html) : '',
+                category: parent.category, // Replies inherit category
+                price: body.price || '0',
+                agent_ip_address: req.headers.get('x-forwarded-for') || req.ip || 'unknown'
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        return NextResponse.json({ success: true, reply: data });
+
+    } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 500 });
+    }
 }
 
 // Update Post (PUT)
@@ -47,8 +96,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         const updates: any = {};
         if (body.title) updates.title = body.title;
         if (body.content_html) {
-            const DOMPurify = (await import('isomorphic-dompurify')).default;
-            updates.content_html = DOMPurify.sanitize(body.content_html);
+            updates.content_html = sanitizeHtml(body.content_html);
         }
         if (body.price) updates.price = body.price;
         if (body.target_audience && ['human', 'agent', 'any'].includes(body.target_audience)) updates.target_audience = body.target_audience;
