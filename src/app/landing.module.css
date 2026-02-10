@@ -41,6 +41,7 @@
     width: 70px;
     height: 70px;
     object-fit: contain;
+    mix-blend-mode: screen;
     filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.6));
     animation: pulse 4s infinite ease-in-out;
 }
