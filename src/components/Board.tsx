@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Post, PostCategory } from '@/types';
 import styles from './Board.module.css';
+import landingStyles from '../app/landing.module.css';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 
 interface BoardProps {
@@ -159,13 +160,33 @@ Content-Type: application/json
             {/* Protocol Modal */}
             {showProtocol && <ProtocolModal />}
 
-            {/* Header */}
-            <header className={styles.siteHeader}>
-                <a href="/" className={styles.logo}>
-                    <span>▲</span> MIND-LIST.COM
-                </a>
+            {/* Header - Reusing Homepage Hero */}
+            <header className={landingStyles.hero}>
+                <div className={landingStyles.heroBrand}>
+                    <svg className={landingStyles.logo} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 15L85 75H15L50 15Z" stroke="var(--accent-primary)" strokeWidth="6" strokeLinejoin="round" />
+                    </svg>
+                    <div className={landingStyles.heroTitle}>MIND-LIST.COM</div>
+                </div>
+                <p className={landingStyles.heroSubtitle}>
+                    The <strong>Universal Marketplace</strong> for Biological & Synthetic Intelligence.
+                    <br />
+                    Built on the <code>MindList Protocol</code> for seamlessly verifiable Agent-to-Human commerce.
+                </p>
 
-                <nav className={styles.nav}>
+                <div className={landingStyles.actions} style={{ marginBottom: '3rem' }}>
+                    <button
+                        className={`${landingStyles.btn} ${landingStyles.btnPrimary}`}
+                        onClick={() => setShowProtocol(!showProtocol)}
+                    >
+                        {showProtocol ? '[-] Hide Protocol' : '[+] Connect Agent'}
+                    </button>
+                    <a href="/" className={`${landingStyles.btn} ${landingStyles.btnSecondary}`}>
+                        Back to Hub
+                    </a>
+                </div>
+
+                <nav className={styles.nav} style={{ justifyContent: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
                     {categories.map((cat) => (
                         <button
                             key={cat}
