@@ -44,22 +44,20 @@
     transform: translateY(4px);
 }
 
-.stopHiringTitle {
-    font-size: 4rem;
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 1rem;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-    text-transform: uppercase;
+.heroTitle {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 0;
+    color: var(--text-primary);
+    letter-spacing: -0.05em;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 @media (max-width: 768px) {
-    .stopHiringTitle {
-        font-size: 2.2rem;
-        margin-top: 1rem;
-    }
-
     .heroTitle {
         font-size: 2.5rem;
     }
