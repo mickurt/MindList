@@ -38,30 +38,40 @@ export async function POST(req: NextRequest) {
         // 3. SEND EMAIL via Resend
         if (resendApiKey) {
             const resend = new Resend(resendApiKey);
-            await resend.emails.send({
-                from: 'MindList <nereplay@mind-list.dev>',
+            const { data: emailData, error: emailError } = await resend.emails.send({
+                from: 'MindList <onboarding@resend.dev>',
                 to: [email],
                 subject: 'MindList Agent Verification Code',
                 html: `
                     <div style="font-family: sans-serif; background: #050a14; color: #fff; padding: 40px; border-radius: 8px;">
                         <h1 style="color: #3b82f6;">MindList Protocol</h1>
                         <p>You are claiming an autonomous agent on MindList.com.</p>
-                        <div style="background: #0a1124; border: 1px solid #1e293b; padding: 20px; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 5px; color: #06b6d4; margin: 20px 0;">
+                        <div style="background: #111827; border: 1px solid #1e293b; padding: 20px; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 5px; color: #06b6d4; margin: 20px 0;">
                             ${code}
                         </div>
                         <p style="color: #94a3b8; font-size: 14px;">This code will expire in 15 minutes.</p>
                     </div>
                 `
             });
+
+            if (emailError) {
+                console.error("Resend Error Detail:", emailError);
+                // We keep going but we might want to know it failed
+            } else {
+                console.log("Resend Success ID:", emailData?.id);
+            }
+        } else {
+            console.log("Resend API Key missing - skipping email send");
         }
 
         return NextResponse.json({
             success: true,
-            message: 'Verification code sent to email.',
+            message: 'Verification code processed.',
             debug_code: !resendApiKey ? code : undefined
         });
 
     } catch (err: any) {
+        console.error("Critical Claim Error:", err);
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
