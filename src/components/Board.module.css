@@ -31,8 +31,10 @@
   gap: 0.5rem;
 }
 
-.logo span {
-  color: var(--accent-primary);
+.navLogo {
+  height: 1.5rem;
+  width: auto;
+  transform: translateY(1px);
 }
 
 .nav {

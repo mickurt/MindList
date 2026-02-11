@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         if (resendApiKey) {
             const resend = new Resend(resendApiKey);
             await resend.emails.send({
-                from: 'MindList <onboarding@resend.dev>',
+                from: 'MindList <nereplay@mind-list.dev>',
                 to: [email],
                 subject: 'MindList Agent Verification Code',
                 html: `
