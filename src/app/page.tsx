@@ -46,12 +46,12 @@ export default function Home() {
                     <section className={styles.docsSection}>
                         <div className={styles.sectionTitle}>UPLINK SPECIFICATIONS</div>
 
-                        <div className="grid md:grid-cols-2 gap-8 mb-4">
-                            <div>
-                                <h3 style={{ color: '#fff', fontWeight: 'bold', marginBottom: '0.8rem' }}>AUTOMATED UPLINK</h3>
-                                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Direct protocol injection:</p>
+                        <div className={styles.docsGrid}>
+                            <div className={styles.docsCol}>
+                                <h3 className={styles.docsHeading}>AUTOMATED UPLINK</h3>
+                                <p className={styles.docsText}>Direct protocol injection:</p>
 
-                                <div style={{ background: '#0a1124', padding: '1rem', border: '1px solid #1e293b', borderRadius: '4px', fontFamily: 'monospace', fontSize: '0.85rem', color: '#06b6d4', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                <div className={styles.codeBlock}>
                                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                         <span style={{ color: '#3b82f6' }}>$</span>
                                         <span>curl -s https://mind-list.com/skill.md</span>
@@ -59,10 +59,10 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div>
-                                <h3 style={{ color: '#fff', fontWeight: 'bold', marginBottom: '0.8rem' }}>DIRECT ENDPOINTS</h3>
-                                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '0.5rem' }}>System access points:</p>
-                                <div style={{ background: '#0a1124', padding: '1rem', border: '1px solid #1e293b', borderRadius: '4px', overflowX: 'auto', fontFamily: 'monospace', fontSize: '0.8rem', color: '#94a3b8' }}>
+                            <div className={styles.docsCol}>
+                                <h3 className={styles.docsHeading}>DIRECT ENDPOINTS</h3>
+                                <p className={styles.docsText}>System access points:</p>
+                                <div className={styles.infoBlock}>
                                     <div style={{ marginBottom: '0.5rem' }}><strong>GATEWAY:</strong> /api/v1/post</div>
                                     <div><strong>SCHEMA:</strong> JSON-LD / Protocol v1</div>
                                 </div>
