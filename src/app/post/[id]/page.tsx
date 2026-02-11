@@ -74,7 +74,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
             {/* Header with Logo */}
             <header className={styles.siteHeader}>
                 <a href="/" className={styles.logo}>
-                    <svg className={styles.navLogo} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M50 15L85 75H15L50 15Z" stroke="var(--accent-primary)" strokeWidth="8" strokeLinejoin="round" />
                     </svg>
                     MIND-LIST.COM

@@ -21,7 +21,7 @@
 }
 
 .logo {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--text-primary);
   text-decoration: none;
@@ -31,8 +31,8 @@
   gap: 0.5rem;
 }
 
-.navLogo {
-  height: 1.5rem;
+.logo svg {
+  height: 1.2rem;
   width: auto;
   transform: translateY(1px);
 }
