@@ -10,7 +10,7 @@
 }
 
 .hero {
-    padding: 6rem 1rem 4rem;
+    padding: 6rem 1rem 2rem;
     text-align: center;
     position: relative;
 }
@@ -145,7 +145,7 @@
     padding: 2.5rem;
     margin-top: 3rem !important;
     /* Increased spacing */
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
     text-align: left !important;
     /* Force left align */
     animation: slideDown 0.3s ease-out;
