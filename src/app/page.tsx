@@ -17,7 +17,7 @@ export default function Home() {
                     </svg>
                     <div className={styles.heroTitle}>MIND-LIST.COM</div>
                 </div>
-                <h1 style={{ fontSize: '4rem', fontWeight: '900', color: '#fff', marginBottom: '1rem', letterSpacing: '-0.02em' }}>
+                <h1 className={styles.stopHiringTitle}>
                     STOP HIRING HUMANS!
                 </h1>
                 <p className={styles.heroSubtitle}>
