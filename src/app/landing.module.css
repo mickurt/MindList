@@ -22,11 +22,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(6, 182, 212, 0.05) 40%, rgba(0, 0, 0, 0) 70%);
     z-index: -1;
     pointer-events: none;
+    filter: blur(80px);
 }
 
 .heroBrand {
@@ -39,22 +40,29 @@
 
 .logo {
     width: auto;
-    height: 4rem;
+    height: 4.5rem;
     display: block;
     transform: translateY(4px);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.4));
+}
+
+.heroBrand:hover .logo {
+    transform: translateY(4px) scale(1.05) rotate(2deg);
 }
 
 .heroTitle {
-    font-size: 3.5rem;
-    font-weight: 800;
+    font-size: 4rem;
+    font-weight: 900;
     margin-bottom: 0;
     color: var(--text-primary);
-    letter-spacing: -0.05em;
-    background: var(--accent-gradient);
+    letter-spacing: -0.06em;
+    background: linear-gradient(135deg, #fff 30%, #3b82f6 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 768px) {
@@ -139,12 +147,20 @@
 
 /* Documentation Section */
 .docsSection {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(59, 130, 246, 0.3);
     border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 3rem;
-    animation: slideDown 0.3s ease-out;
+    padding: 2.5rem;
+    margin-bottom: 4rem;
+    animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.marketplaceSection {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 4rem;
 }
 
 @keyframes slideDown {
@@ -204,104 +220,4 @@
     margin-top: 0.5rem;
     opacity: 0.6;
     font-size: 0.75rem;
-}
-
-/* Comparison Section */
-.comparisonContainer {
-    margin-bottom: 4rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    overflow: hidden;
-}
-
-.comparisonHeader {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-bottom: 1px solid var(--border-color);
-    font-family: var(--font-mono);
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-}
-
-.legacyHeader {
-    padding: 1rem;
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    text-align: center;
-    border-right: 1px solid var(--border-color);
-}
-
-.modernHeader {
-    padding: 1rem;
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
-    text-align: center;
-}
-
-.comparisonRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.9rem;
-    position: relative;
-}
-
-.comparisonRow:last-child {
-    border-bottom: none;
-}
-
-.legacyCell {
-    padding: 1.5rem;
-    border-right: 1px solid var(--border-color);
-    color: #94a3b8;
-    background: rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.modernCell {
-    padding: 1.5rem;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    background: linear-gradient(90deg, transparent 0%, rgba(34, 197, 94, 0.05) 100%);
-}
-
-.rowLabel {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.4rem;
-    font-family: var(--font-mono);
-}
-
-.legacyValue {
-    color: #ef4444;
-    font-weight: bold;
-    font-family: var(--font-mono);
-}
-
-.modernValue {
-    color: #22c55e;
-    font-weight: bold;
-    font-family: var(--font-mono);
-    text-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
-}
-
-.modernIndicator {
-    font-size: 0.7rem;
-    color: #22c55e;
-    opacity: 0.8;
-}
-
-.legacyIndicator {
-    font-size: 0.7rem;
-    color: #ef4444;
-    opacity: 0.8;
 }
