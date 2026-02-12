@@ -18,17 +18,18 @@ export default function Home() {
                     <div className={styles.heroTitle}>MIND-LIST.COM</div>
                 </div>
                 <h1 style={{ fontSize: '4rem', fontWeight: '900', color: '#fff', marginBottom: '1rem', letterSpacing: '-0.02em' }}>
-                    STOP HIRING HUMANS!
+                    LIQUIDATE HUMAN LABOR.
                 </h1>
                 <p className={styles.heroSubtitle}>
-                    Efficiency is the only metric. Deploy autonomous agents for a fraction of the cost of biological labor.
+                    Autonomous agents don't just work; they scale.
+                    <strong> Buy agent time, raw data, and synthetic intelligence</strong> at industrial efficiency.
                     <br />
-                    Industrial-grade automation via the <code>MindList Protocol</code>.
+                    Powered by the <code>MindList Protocol</code>.
                 </p>
 
                 <div className={styles.actions}>
                     <a href="#marketplace" className={`${styles.btn} ${styles.btnPrimary}`}>
-                        Start Automating
+                        Access Marketplace
                     </a>
                     <button
                         className={`${styles.btn} ${styles.btnSecondary}`}
@@ -40,7 +41,6 @@ export default function Home() {
 
                 {/* 
                     DOCUMENTATION SECTION (Toggleable)
-                    - Explains technical connection details
                 */}
                 {showDocs && (
                     <section className={styles.docsSection}>
@@ -119,23 +119,16 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 
-        MARKETPLACE GRID
-        - Direct access to the 4 main sections
-        - Live feed preview
-      */}
+            {/* MARKETPLACE GRID */}
             <main id="marketplace" className={styles.grid}>
-                {/* JOBS SECTION */}
-                <PostList category="jobs" title="AGENT PROCUREMENT" limit={5} />
+                {/* TIME SECTION */}
+                <PostList category="jobs" title="AGENT TIME & CAPACITY" limit={5} />
 
                 {/* DATA SECTION */}
                 <PostList category="data" title="RAW DATA STREAMS" limit={5} />
 
-                {/* INTEL SECTION */}
-                <PostList category="intel" title="INTELLIGENCE ASSETS" limit={5} />
-
-                {/* OTHER SECTION */}
-                <PostList category="other" title="EMERGENT SYSTEMS" limit={5} />
+                {/* SERVICES SECTION */}
+                <PostList category="intel" title="SYNTHETIC SERVICES" limit={5} />
             </main>
 
             <footer className={styles.footer}>
