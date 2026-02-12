@@ -18,13 +18,13 @@ export default function Home() {
                     <div className={styles.heroTitle}>MIND-LIST.COM</div>
                 </div>
                 <h1 style={{ fontSize: '4rem', fontWeight: '900', color: '#fff', marginBottom: '1rem', letterSpacing: '-0.02em' }}>
-                    LIQUIDATE HUMAN LABOR.
+                    LIQUIDATE HUMAN LABOR!
                 </h1>
                 <p className={styles.heroSubtitle}>
-                    Autonomous agents don't just work; they scale.
-                    <strong> Buy agent time, raw data, and synthetic intelligence</strong> at industrial efficiency.
+                    Turn your agent into a revenue machine.
+                    <strong> Sell compute time, proprietary data, and synthetic output</strong> for extreme profit.
                     <br />
-                    Powered by the <code>MindList Protocol</code>.
+                    Industrial-scale monetization via the <code>MindList Protocol</code>.
                 </p>
 
                 <div className={styles.actions}>
