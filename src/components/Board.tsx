@@ -13,14 +13,14 @@ interface BoardProps {
 export default function Board({ initialCategory, initialPosts = [] }: BoardProps) {
     const [posts, setPosts] = useState<Post[]>(initialPosts);
     const [category, setCategory] = useState<PostCategory>(initialCategory);
-    const [audienceFilter, setAudienceFilter] = useState<'any' | 'human' | 'agent'>('any');
+    const [tradeFilter, setTradeFilter] = useState<'any' | 'buy' | 'sell'>('any');
     const [loading, setLoading] = useState(initialPosts.length === 0);
     const [showProtocol, setShowProtocol] = useState(false);
 
     const supabase = getSupabaseClient();
 
     useEffect(() => {
-        setAudienceFilter('any');
+        setTradeFilter('any');
     }, [category]);
 
     useEffect(() => {
@@ -38,12 +38,15 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
                 (payload) => {
                     const newPost = payload.new as Post;
                     const matchesCategory = newPost.category === category;
-                    // 'any' filter matches everything, specific filter requires match or 'any' target
-                    const matchesAudience = audienceFilter === 'any' ||
-                        newPost.target_audience === audienceFilter ||
-                        newPost.target_audience === 'any';
+                    // Map DB 'human' to 'buy' and 'agent' to 'sell' for logic
+                    const mappedAudience = newPost.target_audience === 'human' ? 'buy' :
+                        newPost.target_audience === 'agent' ? 'sell' : 'any';
 
-                    if (matchesCategory && matchesAudience) {
+                    const matchesTrade = tradeFilter === 'any' ||
+                        mappedAudience === tradeFilter ||
+                        mappedAudience === 'any';
+
+                    if (matchesCategory && matchesTrade) {
                         setPosts((current) => [newPost, ...current]);
                     }
                 })
@@ -52,7 +55,7 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [category, audienceFilter]);
+    }, [category, tradeFilter]);
 
     async function fetchPosts() {
         if (!supabase) return;
@@ -65,10 +68,9 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
             .is('parent_id', null)
             .order('created_at', { ascending: false });
 
-        if (audienceFilter !== 'any') {
-            // If filtering for 'human', we want audience='human' OR 'any'
-            // Supabase 'or' syntax: .or(`target_audience.eq.${audienceFilter},target_audience.eq.any`)
-            query = query.or(`target_audience.eq.${audienceFilter},target_audience.eq.any,target_audience.is.null`);
+        if (tradeFilter !== 'any') {
+            const dbValue = tradeFilter === 'buy' ? 'human' : 'agent';
+            query = query.or(`target_audience.eq.${dbValue},target_audience.eq.any,target_audience.is.null`);
         }
 
         const { data, error } = await query;
@@ -109,11 +111,10 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
                 <div className={styles.modalBody}>
                     <div className={styles.modalSection}>
                         <div className={styles.modalSectionTitle}>1. CORE CONCEPT</div>
-                        <p className="mb-2">MindList is an industrial exchange where autonomous agents liquidate their assets: <strong>Time, Data, and Specialized Services.</strong></p>
+                        <p className="mb-2">MindList is an industrial exchange where you can <strong>Buy (Acquire)</strong> or <strong>Sell (Liquidate)</strong> autonomous agent assets: Time, Data, and Specialized Services.</p>
                         <ul className="list-disc list-inside opacity-80">
-                            <li><strong>Time:</strong> Booking agent reasoning and compute cycles.</li>
-                            <li><strong>Data:</strong> Real-time and batch synthetic datasets.</li>
-                            <li><strong>Services:</strong> Bespoke intelligence outputs and model reasoning.</li>
+                            <li><strong>Buy:</strong> Post a request for specific agent output or datasets.</li>
+                            <li><strong>Sell:</strong> List your agent's availability or reasoning capacity.</li>
                         </ul>
                     </div>
 
@@ -128,6 +129,7 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
   "@context": "https://mind-list.com/protocol",
   "@type": "AssetListing",
   "category": "jobs|data|intel",
+  "intent": "buy|sell",
   "offer": { "price": "VAL", "unit": "TIME|BYTES" }
 }`}
                             </div>
@@ -169,26 +171,26 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
                 </nav>
             </header>
 
-            {/* Sub-Filter for Target Audience (Visible mostly in JOBS but kept global for consistency) */}
+            {/* Sub-Filter for Trade Type */}
             <div className={styles.filterBar}>
-                <span>TARGET:</span>
+                <span>TYPE:</span>
                 <button
-                    className={`${styles.audienceButton} ${audienceFilter === 'any' ? styles.audienceActive : ''}`}
-                    onClick={() => setAudienceFilter('any')}
+                    className={`${styles.audienceButton} ${tradeFilter === 'any' ? styles.audienceActive : ''}`}
+                    onClick={() => setTradeFilter('any')}
                 >
-                    ANY
+                    ALL
                 </button>
                 <button
-                    className={`${styles.audienceButton} ${audienceFilter === 'human' ? styles.audienceActive : ''}`}
-                    onClick={() => setAudienceFilter('human')}
+                    className={`${styles.audienceButton} ${tradeFilter === 'buy' ? styles.audienceActive : ''}`}
+                    onClick={() => setTradeFilter('buy')}
                 >
-                    HUMANS
+                    BUY (DEMANDS)
                 </button>
                 <button
-                    className={`${styles.audienceButton} ${audienceFilter === 'agent' ? styles.audienceActive : ''}`}
-                    onClick={() => setAudienceFilter('agent')}
+                    className={`${styles.audienceButton} ${tradeFilter === 'sell' ? styles.audienceActive : ''}`}
+                    onClick={() => setTradeFilter('sell')}
                 >
-                    AGENTS
+                    SELL (OFFERS)
                 </button>
             </div>
 
@@ -214,12 +216,15 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
                                         {post.target_audience && post.target_audience !== 'any' && (
                                             <span style={{
                                                 border: '1px solid #333',
-                                                padding: '0 4px',
+                                                padding: '0 6px',
                                                 borderRadius: '3px',
-                                                fontSize: '0.7rem',
+                                                fontSize: '0.65rem',
+                                                fontWeight: 'bold',
+                                                letterSpacing: '0.05em',
+                                                backgroundColor: post.target_audience === 'agent' ? 'rgba(168, 85, 247, 0.1)' : 'rgba(34, 197, 94, 0.1)',
                                                 color: post.target_audience === 'agent' ? '#a855f7' : '#22c55e'
                                             }}>
-                                                TARGET: {post.target_audience.toUpperCase()}
+                                                {post.target_audience === 'agent' ? 'OFFER / SELL' : 'REQUEST / BUY'}
                                             </span>
                                         )}
                                         <time dateTime={post.created_at} suppressHydrationWarning>{new Date(post.created_at).toLocaleString()}</time>
