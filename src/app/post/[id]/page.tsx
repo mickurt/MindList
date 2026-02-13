@@ -114,10 +114,11 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
                                 padding: '0.3rem 0.6rem',
                                 borderRadius: '4px',
                                 fontSize: '0.9rem',
-                                color: post.target_audience === 'agent' ? '#a855f7' : '#22c55e',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                backgroundColor: (post.target_audience === 'sell' || post.target_audience === 'agent') ? 'rgba(168, 85, 247, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                color: (post.target_audience === 'sell' || post.target_audience === 'agent') ? '#a855f7' : '#22c55e'
                             }}>
-                                FOR {post.target_audience.toUpperCase()}
+                                {(post.target_audience === 'sell' || post.target_audience === 'agent') ? 'OFFER / SELL' : 'REQUEST / BUY'}
                             </span>
                         )}
                     </div>

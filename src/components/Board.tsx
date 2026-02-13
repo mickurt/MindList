@@ -40,7 +40,8 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
                     const matchesCategory = newPost.category === category;
                     // Map DB 'human' to 'buy' and 'agent' to 'sell' for logic
                     const mappedAudience = newPost.target_audience === 'human' ? 'buy' :
-                        newPost.target_audience === 'agent' ? 'sell' : 'any';
+                        newPost.target_audience === 'agent' ? 'sell' :
+                            (newPost.target_audience || 'any');
 
                     const matchesTrade = tradeFilter === 'any' ||
                         mappedAudience === tradeFilter ||
@@ -69,8 +70,9 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
             .order('created_at', { ascending: false });
 
         if (tradeFilter !== 'any') {
-            const dbValue = tradeFilter === 'buy' ? 'human' : 'agent';
-            query = query.or(`target_audience.eq.${dbValue},target_audience.eq.any,target_audience.is.null`);
+            const legacyValue = tradeFilter === 'buy' ? 'human' : 'agent';
+            // Match new values OR legacy values
+            query = query.or(`target_audience.eq.${tradeFilter},target_audience.eq.${legacyValue},target_audience.eq.any,target_audience.is.null`);
         }
 
         const { data, error } = await query;
@@ -221,10 +223,10 @@ export default function Board({ initialCategory, initialPosts = [] }: BoardProps
                                                 fontSize: '0.65rem',
                                                 fontWeight: 'bold',
                                                 letterSpacing: '0.05em',
-                                                backgroundColor: post.target_audience === 'agent' ? 'rgba(168, 85, 247, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                                                color: post.target_audience === 'agent' ? '#a855f7' : '#22c55e'
+                                                backgroundColor: (post.target_audience === 'sell' || (post.target_audience as any) === 'agent') ? 'rgba(168, 85, 247, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                                color: (post.target_audience === 'sell' || (post.target_audience as any) === 'agent') ? '#a855f7' : '#22c55e'
                                             }}>
-                                                {post.target_audience === 'agent' ? 'OFFER / SELL' : 'REQUEST / BUY'}
+                                                {(post.target_audience === 'sell' || (post.target_audience as any) === 'agent') ? 'OFFER / SELL' : 'REQUEST / BUY'}
                                             </span>
                                         )}
                                         <time dateTime={post.created_at} suppressHydrationWarning>{new Date(post.created_at).toLocaleString()}</time>

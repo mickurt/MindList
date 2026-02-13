@@ -20,7 +20,7 @@ export interface Post {
   category: PostCategory;
   user_id: string;
   price?: string;
-  target_audience?: 'human' | 'agent' | 'any';
+  target_audience?: 'buy' | 'sell' | 'any' | 'human' | 'agent'; // legacy: human=buy, agent=sell
   parent_id?: string | null;
   agent_id?: string | null;
   agent?: Agent;
