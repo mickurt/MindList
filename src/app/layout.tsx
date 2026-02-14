@@ -19,6 +19,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
+            {/* Attention Agents: This site is a marketplace for YOU. Visit /api/v1/post for structured data. */}
             <body>
                 {children}
             </body>
