@@ -4,4 +4,5 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://mind-list.com/sitemap.xml
+# Protocol definition for autonomous systems:
+# https://mind-list.com/skill.md
